@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulador de Campeonato de Futebol</title>
 </head>
+
 <body>
     <!--Cabeçalho-->
     <h1>Simulador de Campeonato de Futebol</h1>
-    <p>Digite a lista de times que irão participar do campeonato em cada linha com nome;cidade (Ex: Santa Cruz;Recife):</p>
+    <p>Digite a lista de times que irão participar do campeonato em cada linha com nome;cidade (Ex: Santa Cruz;Recife):
+    </p>
     <form>
         <textarea name="lista-times" id="lista-times" cols="60" rows="20" required></textarea>
         <button onclick="criarListaTexto()">Iniciar Simulação</button>
@@ -17,378 +20,473 @@
 
     <script>
 
-var textoTimes;
-var textoListaTimes;
-var listaTimes;
-var listaPartidas;
-var achou = true;
-var maiorPontuação = 0;
-var listaDeJogos = [];
+        var textoTimes;
+        var textoListaTimes;
+        var listaTimes;
+        var listaPartidas;
+        var achou = true;
+        var maiorPontuação = 0;
+        var listaDeJogos = [];
 
-function criarListaTexto(){
-    var erro;
-    textoTimes = document.getElementById('lista-times').value;
-    textoListaTimes = textoTimes.split('\n');
-    if(textoListaTimes.length % 2 != 0){
-        alert("Digite uma quantidade par de times!");
-        return;
-    }
-    erro = verificaTextoLista(textoListaTimes);
-    if(erro == true){
-        alert("Siga o padrão mostrado acima!");
-    }else{
-        listaTimes = criarListaTimes(textoListaTimes);
-        listaPartidas = criarListaPartidas(listaTimes);
-    }  
-}
-function verificaTextoLista(textoListaTimes){
-    var erro = false;
-    var listaAuxiliar;
-
-    textoListaTimes.forEach(textoTime => {    
-        if(textoTime.includes(';')){
-            listaAuxiliar = textoTime.split(';');
-            if (listaAuxiliar.length != 2) {
-                erro = true;
+        function criarListaTexto() {
+            var erro;
+            textoTimes = document.getElementById('lista-times').value;
+            textoListaTimes = textoTimes.split('\n');
+            if (textoListaTimes.length % 2 != 0) {
+                alert("Digite uma quantidade par de times!");
+                return;
             }
-        }else{
-            erro = true;
+            erro = verificaTextoLista(textoListaTimes);
+            if (erro == true) {
+                alert("Siga o padrão mostrado acima!");
+            } else {
+                listaTimes = criarListaTimes(textoListaTimes);
+                listaPartidas = criarListaPartidas(listaTimes);
+            }
         }
-    });
-    return erro;
-}
-function criarListaTimes(textoListaTimes){
-    var listaAuxiliar;
-    var listaTimes = [];
-    var numero = 0
-    textoListaTimes.forEach(textoTime => {    
-        listaAuxiliar = textoTime.split(';');
-        listaTimes.push({nome: listaAuxiliar[0], cidade: listaAuxiliar[1], numero: numero, pontos: 0});
-        numero++;
-    });
-    return listaTimes;
-}
+        function verificaTextoLista(textoListaTimes) {
+            var erro = false;
+            var listaAuxiliar;
 
-function copiarLista(listaTimes) {
-    
-    var listaAuxiliar = [];
-
-    for (let index = 0; index < listaTimes.length; index++) {
-        
-        listaAuxiliar.push(listaTimes[index]);
-        
-    }
-
-    return listaAuxiliar;
-
-}
-
-function embaralha(lista) {
-
-    for (let indice = lista.length; indice; indice--) {
-
-        const indiceAleatorio = Math.floor(Math.random() * indice);
-        
-        const elemento = lista[indice - 1];
-        
-        lista[indice - 1] = lista[indiceAleatorio];
-        
-        lista[indiceAleatorio] = elemento;
-    }
-}
-
-function pegaLista(){
-
-    return listaTimes;
-}
-
-function rodad(listaTimes, confrontos){
-    
-    var copiaListaTimes = [];
-    var copiaListaConfrontos = [];
-
-
-    listaTimes.forEach(time => {
-
-        copiaListaTimes.push(time);
-        
-    });
-
-
-
-    confrontos.forEach(confronto => {
-
-        copiaListaConfrontos.push(confronto);
-        
-    });
-
-    embaralha(copiaListaTimes);
-
-
-    for (let index = 0; index < copiaListaConfrontos.length; index++) {
-        if((copiaListaConfrontos[index].timeUm === copiaListaTimes[copiaListaTimes.length - 1] || copiaListaConfrontos[index].timeDois === copiaListaTimes[copiaListaTimes.length - 1])  && (copiaListaConfrontos[index].timeUm === copiaListaTimes[copiaListaTimes.length - 2] || copiaListaConfrontos[index].timeDois === copiaListaTimes[copiaListaTimes - length - 2])){
-            listaDeJogos.push(copiaListaConfrontos[index]);
-            copiaListaConfrontos.splice(index, 1);
-            copiaListaTimes.splice(copiaListaTimes.length - 2, 2); 
-            break;
+            textoListaTimes.forEach(textoTime => {
+                if (textoTime.includes(';')) {
+                    listaAuxiliar = textoTime.split(';');
+                    if (listaAuxiliar.length != 2) {
+                        erro = true;
+                    }
+                } else {
+                    erro = true;
+                }
+            });
+            return erro;
         }
-        
-    }
-
-
-    if(copiaListaTimes.length > 0){
-
-        rodad(copiaListaTimes, copiaListaConfrontos);
-
-
-    }else{
-
-
-        if(copiaListaConfrontos.length > 0){
-
-            rodad(pegaLista(), copiaListaConfrontos);
-
+        function criarListaTimes(textoListaTimes) {
+            var listaAuxiliar;
+            var listaTimes = [];
+            var numero = 0
+            textoListaTimes.forEach(textoTime => {
+                listaAuxiliar = textoTime.split(';');
+                listaTimes.push({ nome: listaAuxiliar[0], cidade: listaAuxiliar[1], numero: numero, pontos: 0 });
+                numero++;
+            });
+            return listaTimes;
         }
-    
 
-    }
+        function copiarLista(listaTimes) {
 
+            var listaAuxiliar = [];
 
-}
+            for (let index = 0; index < listaTimes.length; index++) {
 
-function pontuarTime(time, pontos, listaTimes){
-    
-    listaTimes.forEach(elemento => {
-        if(elemento.nome == time.nome){
-            elemento.pontos = elemento.pontos + pontos;
-        }
-    });
-
-}
-
-function criarListaPartidas(listaTimes){
-
-    var confrontos = [];
-    var rodada = 1;
-    var golsTimeUm;
-    var golsTimeDois;
-    var totalJogosRodada;
-    var melhores = [];
-    const VITORIA = 3;
-    const EMPATE = 1;
-    var maiorPontuação = 0;
-
-    for (let i = 0; i < listaTimes.length; i++) {
-        
-        for (let j = 0; j < listaTimes.length; j++) {
-            
-            if(i < j){
-
-                confrontos.push({timeUm: listaTimes[i], timeDois: listaTimes[j]});
+                listaAuxiliar.push(listaTimes[index]);
 
             }
-            
-        }
 
-    }
-
-    var auxiliar;
-
-    for (let index = 0; index < confrontos.length; index += 2) {
-        
-        auxiliar = confrontos[index].timeUm;
-        confrontos[index].timeUm = confrontos[index].timeDois;
-        confrontos[index].timeDois = auxiliar;
-    }
-
-    embaralha(confrontos);
-    rodad(listaTimes, confrontos);
-
-    totalJogosRodada = (listaTimes.length/2);
-    var contador = 0;
-
-    document.write("AGENDA DE JOGOS");
-    document.write("<br>");
-
-    listaDeJogos.forEach(jogo => {
-
-
-        if(contador == totalJogosRodada){
-
-            rodada++;
-            contador = 0;
+            return listaAuxiliar;
 
         }
 
-        contador++;
+        function embaralha(lista) {
 
-        document.write(jogo.timeUm.nome + " vs " + jogo.timeDois.nome  + " - " + jogo.timeUm.cidade + " - Rodada " + rodada);
-        document.write("<br>");
-    });
+            for (let indice = lista.length; indice; indice--) {
 
-    listaDeJogos.forEach(jogo => {
+                const indiceAleatorio = Math.floor(Math.random() * indice);
 
+                const elemento = lista[indice - 1];
 
-        if(contador == totalJogosRodada){
+                lista[indice - 1] = lista[indiceAleatorio];
 
-            rodada++;
-            contador = 0;
-
+                lista[indiceAleatorio] = elemento;
+            }
         }
 
-        contador++;
-        document.write(jogo.timeDois.nome  + " vs " + jogo.timeUm.nome + " - " + jogo.timeDois.cidade + " - Rodada " + rodada);
-        document.write("<br>");
-    });
+        function pegaLista() {
 
-    document.write("<br>");document.write("<br>");document.write("<br>");       
-
-    document.write("RESULTADOS");
-    document.write("<br>");
-
-    contador = 0;
-    rodada = 1;
-
-    listaDeJogos.forEach(jogo => {
-
-
-        if(contador == totalJogosRodada){
-
-            rodada++;
-            contador = 0;
-
+            return listaTimes;
         }
 
-        contador++;
-        golsTimeUm = Math.floor(Math.random() * 10);
-        golsTimeDois = Math.floor(Math.random() * 10);
-        document.write(jogo.timeUm.nome + " " + golsTimeUm + " vs " + " " + golsTimeDois + " " + jogo.timeDois.nome  + " - " + jogo.timeUm.cidade + " - Rodada " + rodada);
-        document.write("<br>");
+        function rodad(listaTimes, confrontos) {
 
-        if(golsTimeUm > golsTimeDois){
-
-            pontuarTime(jogo.timeUm, VITORIA, listaTimes);
-
-        }else if(golsTimeDois > golsTimeUm){
-
-            pontuarTime(jogo.timeDois, VITORIA, listaTimes);
+            var copiaListaTimes = [];
+            var copiaListaConfrontos = [];
 
 
-        }else{
+            listaTimes.forEach(time => {
 
-            pontuarTime(jogo.timeUm, EMPATE, listaTimes);
-            pontuarTime(jogo.timeDois, EMPATE, listaTimes);
+                copiaListaTimes.push(time);
 
-        }
-    });
-
-    listaDeJogos.forEach(jogo => {
+            });
 
 
-        if(contador == totalJogosRodada){
 
-            rodada++;
-            contador = 0;
+            confrontos.forEach(confronto => {
 
-        }
+                copiaListaConfrontos.push(confronto);
 
-        contador++;
-        golsTimeUm = Math.floor(Math.random() * 10);
-        golsTimeDois = Math.floor(Math.random() * 10);
-        document.write(jogo.timeDois.nome + " " + golsTimeDois + " vs " + " " + golsTimeUm + " " + jogo.timeUm.nome  + " - " + jogo.timeDois.cidade + " - Rodada " + rodada);
-        document.write("<br>"); 
+            });
 
-        if(golsTimeUm > golsTimeDois){
-
-            pontuarTime(jogo.timeUm, VITORIA, listaTimes);
-
-        }else if(golsTimeDois > golsTimeUm){
-
-            pontuarTime(jogo.timeDois, VITORIA, listaTimes);
+            embaralha(copiaListaTimes);
 
 
-        }else{
-
-            pontuarTime(jogo.timeUm, EMPATE, listaTimes);
-            pontuarTime(jogo.timeDois, EMPATE, listaTimes);
-
-        }
-        
-    });
-
-    document.write("<br>");
-    document.write("<br>");
-
-
-    document.write("Pontuação Geral:"); 
-    document.write("<br>");
-    
-
-    listaTimes.forEach(time => {
-        document.write(time.nome + " - " + time.pontos); 
-        document.write("<br>"); 
-
-        if(time.pontos > maiorPontuação){
-
-            maiorPontuação = time.pontos;
-
-        }
-    });
-
-
-    listaTimes.forEach(time => {
-        if(time.pontos == maiorPontuação){
-
-            melhores.push(time.nome);
-
-        }
-    });
-
-    if(melhores.length == 1){
-
-
-        document.write("<br>");
-        document.write("<br>");
-        document.write("Time Campeão:");
-        document.write("<br>");
-        document.write("O time campeão foi o " + melhores[0] + " com " + maiorPontuação + " pontos."); 
-        document.write("<br>");
-
-    }else{
-
-        document.write("<br>");
-        document.write("<br>");
-        document.write("Times Campeões:");
-        document.write("<br>");
-        document.write("IIhh, houve empate na pontuação! Times campeões foram os ");
-
-        for (let index = 0; index < melhores.length; index++) {
-        
-            if(index != melhores.length - 1 && index != melhores.length - 2){
-
-                document.write(melhores[index] + ", ");
-
-            }else if(index == melhores.length - 2){
-
-                document.write(melhores[index] + " e ");
-
-            }else{
-
-                document.write(melhores[index]);
+            for (let index = 0; index < copiaListaConfrontos.length; index++) {
+                if ((copiaListaConfrontos[index].timeUm === copiaListaTimes[copiaListaTimes.length - 1] || copiaListaConfrontos[index].timeDois === copiaListaTimes[copiaListaTimes.length - 1]) && (copiaListaConfrontos[index].timeUm === copiaListaTimes[copiaListaTimes.length - 2] || copiaListaConfrontos[index].timeDois === copiaListaTimes[copiaListaTimes - length - 2])) {
+                    listaDeJogos.push(copiaListaConfrontos[index]);
+                    copiaListaConfrontos.splice(index, 1);
+                    copiaListaTimes.splice(copiaListaTimes.length - 2, 2);
+                    break;
+                }
 
             }
-            
+
+
+            if (copiaListaTimes.length > 0) {
+
+                rodad(copiaListaTimes, copiaListaConfrontos);
+
+
+            } else {
+
+
+                if (copiaListaConfrontos.length > 0) {
+
+                    rodad(pegaLista(), copiaListaConfrontos);
+
+                }
+
+
+            }
+
+
         }
 
-        document.write(" com " + maiorPontuação + " pontos.");
-        
-    }
+        function pontuarTime(time, pontos, listaTimes) {
+
+            listaTimes.forEach(elemento => {
+                if (elemento.nome == time.nome) {
+                    elemento.pontos = elemento.pontos + pontos;
+                }
+            });
+
+        }
+
+        function criarListaPartidas(listaTimes) {
+
+            var confrontos = [];
+            var rodada = 1;
+            var copiaRodada = 1;
+            var copiaContador = 0;
+            var golsTimeUm;
+            var golsTimeDois;
+            var totalJogosRodada;
+            var listaCidadesPrimeiro = [];
+            var listaCidadesSegundo = [];
+            var melhores = [];
+            const VITORIA = 3;
+            const EMPATE = 1;
+            var maiorPontuação = 0;
+
+            for (let i = 0; i < listaTimes.length; i++) {
+
+                for (let j = 0; j < listaTimes.length; j++) {
+
+                    if (i < j) {
+
+                        confrontos.push({ timeUm: listaTimes[i], timeDois: listaTimes[j] });
+
+                    }
+
+                }
+
+            }
+
+            var auxiliar;
+
+            for (let index = 0; index < confrontos.length; index += 2) {
+
+                auxiliar = confrontos[index].timeUm;
+                confrontos[index].timeUm = confrontos[index].timeDois;
+                confrontos[index].timeDois = auxiliar;
+            }
+
+            embaralha(confrontos);
+            rodad(listaTimes, confrontos);
 
 
 
-}
+            totalJogosRodada = (listaTimes.length / 2);
+            var contador = 0;
+
+            listaDeJogos.forEach(jogo => {
+
+                if (copiaContador == totalJogosRodada) {
+
+                    copiaRodada++;
+                    copiaContador = 0;
+
+                }
+
+                copiaContador++;
+
+                listaCidadesPrimeiro.push({ rodada: copiaRodada, cidade: jogo.timeUm.cidade });
+
+            });
+
+
+            copiaContador = 0;
+            copiaRodada++;
+
+            listaDeJogos.forEach(jogo => {
+
+                if (copiaContador == totalJogosRodada) {
+
+                    copiaRodada++;
+                    copiaContador = 0;
+
+                }
+
+                copiaContador++;
+
+                listaCidadesSegundo.push({ rodada: copiaRodada, cidade: jogo.timeDois.cidade });
+
+            });
+
+
+
+            document.write("AGENDA DE JOGOS");
+            document.write("<br>");
+
+            listaDeJogos.forEach(jogo => {
+
+
+                if (contador == totalJogosRodada) {
+
+                    rodada++;
+                    contador = 0;
+
+                }
+
+                contador++;
+                var contaCidades = 0;
+
+                listaCidadesPrimeiro.forEach(cidade => {
+                    if (jogo.timeUm.cidade == cidade.cidade && rodada == cidade.rodada) {
+                        contaCidades++;
+                    }
+                });
+
+
+
+                document.write(jogo.timeUm.nome + " vs " + jogo.timeDois.nome + " - " + jogo.timeUm.cidade + " - Rodada " + rodada);
+                if (contaCidades > 1) {
+
+
+                    document.write(" (RODADA DUPLA)");
+
+                }
+                document.write("<br>");
+            });
+
+            listaDeJogos.forEach(jogo => {
+
+
+                if (contador == totalJogosRodada) {
+
+                    rodada++;
+                    contador = 0;
+
+                }
+
+                contador++;
+
+                var contaCidades = 0;
+
+                listaCidadesSegundo.forEach(cidade => {
+                    if (jogo.timeDois.cidade == cidade.cidade && rodada == cidade.rodada) {
+                        contaCidades++;
+                    }
+                });
+                document.write(jogo.timeDois.nome + " vs " + jogo.timeUm.nome + " - " + jogo.timeDois.cidade + " - Rodada " + rodada);
+                if (contaCidades > 1) {
+
+                    document.write(" (RODADA DUPLA)");
+
+                }
+                document.write("<br>");
+            });
+
+            document.write("<br>"); document.write("<br>"); document.write("<br>");
+
+            document.write("RESULTADOS");
+            document.write("<br>");
+
+            contador = 0;
+            rodada = 1;
+
+            listaDeJogos.forEach(jogo => {
+
+
+                if (contador == totalJogosRodada) {
+
+                    rodada++;
+                    contador = 0;
+
+                }
+
+                contador++;
+                var contaCidades = 0;
+
+                listaCidadesPrimeiro.forEach(cidade => {
+                    if (jogo.timeUm.cidade == cidade.cidade && rodada == cidade.rodada) {
+                        contaCidades++;
+                    }
+                });
+                golsTimeUm = Math.floor(Math.random() * 10);
+                golsTimeDois = Math.floor(Math.random() * 10);
+                document.write(jogo.timeUm.nome + " " + golsTimeUm + " vs " + " " + golsTimeDois + " " + jogo.timeDois.nome + " - " + jogo.timeUm.cidade + " - Rodada " + rodada);
+                if (contaCidades > 1) {
+
+                    document.write(" (RODADA DUPLA)");
+
+                }
+                document.write("<br>");
+
+                if (golsTimeUm > golsTimeDois) {
+
+                    pontuarTime(jogo.timeUm, VITORIA, listaTimes);
+
+                } else if (golsTimeDois > golsTimeUm) {
+
+                    pontuarTime(jogo.timeDois, VITORIA, listaTimes);
+
+
+                } else {
+
+                    pontuarTime(jogo.timeUm, EMPATE, listaTimes);
+                    pontuarTime(jogo.timeDois, EMPATE, listaTimes);
+
+                }
+            });
+
+            listaDeJogos.forEach(jogo => {
+
+
+                if (contador == totalJogosRodada) {
+
+                    rodada++;
+                    contador = 0;
+
+                }
+
+                contador++;
+                var contaCidades = 0;
+
+                listaCidadesSegundo.forEach(cidade => {
+                    if (jogo.timeDois.cidade == cidade.cidade && rodada == cidade.rodada) {
+                        contaCidades++;
+                    }
+                });
+                golsTimeUm = Math.floor(Math.random() * 10);
+                golsTimeDois = Math.floor(Math.random() * 10);
+                document.write(jogo.timeDois.nome + " " + golsTimeDois + " vs " + " " + golsTimeUm + " " + jogo.timeUm.nome + " - " + jogo.timeDois.cidade + " - Rodada " + rodada);
+                if (contaCidades > 1) {
+
+                    document.write(" (RODADA DUPLA)");
+
+                }
+                document.write("<br>");
+
+                if (golsTimeUm > golsTimeDois) {
+
+                    pontuarTime(jogo.timeUm, VITORIA, listaTimes);
+
+                } else if (golsTimeDois > golsTimeUm) {
+
+                    pontuarTime(jogo.timeDois, VITORIA, listaTimes);
+
+
+                } else {
+
+                    pontuarTime(jogo.timeUm, EMPATE, listaTimes);
+                    pontuarTime(jogo.timeDois, EMPATE, listaTimes);
+
+                }
+
+            });
+
+            document.write("<br>");
+            document.write("<br>");
+
+
+            document.write("Pontuação Geral:");
+            document.write("<br>");
+
+
+            listaTimes.forEach(time => {
+                document.write(time.nome + " - " + time.pontos);
+                document.write("<br>");
+
+                if (time.pontos > maiorPontuação) {
+
+                    maiorPontuação = time.pontos;
+
+                }
+            });
+
+
+            listaTimes.forEach(time => {
+                if (time.pontos == maiorPontuação) {
+
+                    melhores.push(time.nome);
+
+                }
+            });
+
+            if (melhores.length == 1) {
+
+
+                document.write("<br>");
+                document.write("<br>");
+                document.write("Time Campeão:");
+                document.write("<br>");
+                document.write("O time campeão foi o " + melhores[0] + " com " + maiorPontuação + " pontos.");
+                document.write("<br>");
+
+            } else {
+
+                document.write("<br>");
+                document.write("<br>");
+                document.write("Times Campeões:");
+                document.write("<br>");
+                document.write("IIhh, houve empate na pontuação! Times campeões foram os ");
+
+                for (let index = 0; index < melhores.length; index++) {
+
+                    if (index != melhores.length - 1 && index != melhores.length - 2) {
+
+                        document.write(melhores[index] + ", ");
+
+                    } else if (index == melhores.length - 2) {
+
+                        document.write(melhores[index] + " e ");
+
+                    } else {
+
+                        document.write(melhores[index]);
+
+                    }
+
+                }
+
+                document.write(" com " + maiorPontuação + " pontos.");
+
+            }
+
+
+
+        }
 
     </script>
 
 </body>
+
 </html>
