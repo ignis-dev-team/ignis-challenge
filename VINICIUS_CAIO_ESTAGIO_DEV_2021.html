@@ -15,124 +15,181 @@
         <button onclick="criarListaTexto()">Iniciar Simulação</button>
     </form>
     <script>
-        
         var textoTimes;
-    var textoListaTimes;
-    var listaTimes;
-    var listaPartidas;
-    var achou = true;
+        var textoListaTimes;
+        var listaTimes;
+        var listaPartidas;
+        var achou = true;
+        var listaDeJogos = [];
 
-    function criarListaTexto(){
-        var erro;
-        textoTimes = document.getElementById('lista-times').value;
-        textoListaTimes = textoTimes.split('\n');
-        if(textoListaTimes.length % 2 != 0){
-            alert("Digite uma quantidade par de times!");
-            return;
+        function criarListaTexto(){
+            var erro;
+            textoTimes = document.getElementById('lista-times').value;
+            textoListaTimes = textoTimes.split('\n');
+            if(textoListaTimes.length % 2 != 0){
+                alert("Digite uma quantidade par de times!");
+                return;
+            }
+            erro = verificaTextoLista(textoListaTimes);
+            if(erro == true){
+                alert("Siga o padrão mostrado acima!");
+            }else{
+                listaTimes = criarListaTimes(textoListaTimes);
+                listaPartidas = criarListaPartidas(listaTimes);
+            }  
         }
-        erro = verificaTextoLista(textoListaTimes);
-        if(erro == true){
-            alert("Siga o padrão mostrado acima!");
-        }else{
-            listaTimes = criarListaTimes(textoListaTimes);
-            listaPartidas = criarListaPartidas(listaTimes);
-        }  
-    }
-    function verificaTextoLista(textoListaTimes){
-        var erro = false;
-        var listaAuxiliar;
+        function verificaTextoLista(textoListaTimes){
+            var erro = false;
+            var listaAuxiliar;
 
-        textoListaTimes.forEach(textoTime => {    
-            if(textoTime.includes(';')){
-                listaAuxiliar = textoTime.split(';');
-                if (listaAuxiliar.length != 2) {
+            textoListaTimes.forEach(textoTime => {    
+                if(textoTime.includes(';')){
+                    listaAuxiliar = textoTime.split(';');
+                    if (listaAuxiliar.length != 2) {
+                        erro = true;
+                    }
+                }else{
                     erro = true;
                 }
-            }else{
-                erro = true;
-            }
-        });
-        return erro;
-    }
-    function criarListaTimes(textoListaTimes){
-        var listaAuxiliar;
-        var listaTimes = [];
-        var numero = 0
-        textoListaTimes.forEach(textoTime => {    
-            listaAuxiliar = textoTime.split(';');
-            listaTimes.push({nome: listaAuxiliar[0], cidade: listaAuxiliar[1], numero: numero});
-            numero++;
-        });
-        return listaTimes;
-    }
-
-    function copiarLista(listaTimes) {
-        
-        var listaAuxiliar = [];
-
-        for (let index = 0; index < listaTimes.length; index++) {
-            
-            listaAuxiliar.push(listaTimes[index]);
-            
+            });
+            return erro;
+        }
+        function criarListaTimes(textoListaTimes){
+            var listaAuxiliar;
+            var listaTimes = [];
+            var numero = 0
+            textoListaTimes.forEach(textoTime => {    
+                listaAuxiliar = textoTime.split(';');
+                listaTimes.push({nome: listaAuxiliar[0], cidade: listaAuxiliar[1], numero: numero});
+                numero++;
+            });
+            return listaTimes;
         }
 
-        return listaAuxiliar;
-
-    }
-
-    function embaralha(lista) {
-
-        for (let indice = lista.length; indice; indice--) {
-
-            const indiceAleatorio = Math.floor(Math.random() * indice);
+        function copiarLista(listaTimes) {
             
-            // guarda de um índice aleatório da lista
-            const elemento = lista[indice - 1];
-            
-            lista[indice - 1] = lista[indiceAleatorio];
-            
-            lista[indiceAleatorio] = elemento;
-        }
-    }
+            var listaAuxiliar = [];
 
-
-    function criarListaPartidas(listaTimes){
-
-        var confrontos = [];
-        var listaTimesJogaram;
-        var confrontosJogados;
-        var jogosPorRodada = 0;
-
-        for (let i = 0; i < listaTimes.length; i++) {
-            
-            for (let j = 0; j < listaTimes.length; j++) {
+            for (let index = 0; index < listaTimes.length; index++) {
                 
-                if(i < j){
+                listaAuxiliar.push(listaTimes[index]);
+                
+            }
 
-                    confrontos.push({timeUm: listaTimes[i], timeDois: listaTimes[j]});
+            return listaAuxiliar;
 
+        }
+
+        function embaralha(lista) {
+
+            for (let indice = lista.length; indice; indice--) {
+
+                const indiceAleatorio = Math.floor(Math.random() * indice);
+                
+                // guarda de um índice aleatório da lista
+                const elemento = lista[indice - 1];
+                
+                lista[indice - 1] = lista[indiceAleatorio];
+                
+                lista[indiceAleatorio] = elemento;
+            }
+        }
+
+        function pegaLista(){
+
+            return listaTimes;
+        }
+
+        function rodad(listaTimes, confrontos, rodada){
+            
+            var copiaListaTimes = [];
+            var copiaListaConfrontos = [];
+
+
+            listaTimes.forEach(time => {
+
+                copiaListaTimes.push(time);
+                
+            });
+
+
+
+            confrontos.forEach(confronto => {
+
+                copiaListaConfrontos.push(confronto);
+                
+            });
+
+            embaralha(copiaListaTimes);
+
+
+            for (let index = 0; index < copiaListaConfrontos.length; index++) {
+                if((copiaListaConfrontos[index].timeUm === copiaListaTimes[copiaListaTimes.length - 1] || copiaListaConfrontos[index].timeDois === copiaListaTimes[copiaListaTimes.length - 1])  && (copiaListaConfrontos[index].timeUm === copiaListaTimes[copiaListaTimes.length - 2] || copiaListaConfrontos[index].timeDois === copiaListaTimes[copiaListaTimes - length - 2])){
+                    listaDeJogos.push(copiaListaConfrontos[index]);
+                    copiaListaConfrontos.splice(index, 1);
+                    copiaListaTimes.splice(copiaListaTimes.length - 2, 2); 
+                    break;
                 }
                 
             }
 
-        }
 
-        var auxiliar;
+            if(copiaListaTimes.length > 0){
 
-        for (let index = 0; index < confrontos.length; index += 2) {
+                rodad(copiaListaTimes, copiaListaConfrontos,rodada);
+
+
+            }else{
+
+                if(copiaListaConfrontos.length > 0){
+
+                    
+                    rodada++;
+                    rodad(pegaLista(), copiaListaConfrontos,rodada);
+
+                }
             
-            auxiliar = confrontos[index].timeUm;
-            confrontos[index].timeUm = confrontos[index].timeDois;
-            confrontos[index].timeDois = auxiliar;
+
+            }
+
+
         }
+        function criarListaPartidas(listaTimes){
 
-        embaralha(confrontos);
+            var confrontos = [];
+            var rodada = 1;
 
-        confrontos.forEach(confronto => {
-            alert(confronto.timeUm.nome + " " + confronto.timeDois.nome);
-        });
-    }
+            for (let i = 0; i < listaTimes.length; i++) {
+                
+                for (let j = 0; j < listaTimes.length; j++) {
+                    
+                    if(i < j){
 
+                        confrontos.push({timeUm: listaTimes[i], timeDois: listaTimes[j]});
+
+                    }
+                    
+                }
+
+            }
+
+            var auxiliar;
+
+            for (let index = 0; index < confrontos.length; index += 2) {
+                
+                auxiliar = confrontos[index].timeUm;
+                confrontos[index].timeUm = confrontos[index].timeDois;
+                confrontos[index].timeDois = auxiliar;
+            }
+
+            embaralha(confrontos);
+            rodad(listaTimes, confrontos, rodada);
+            listaDeJogos.forEach(jogo => {
+
+                alert(jogo.timeUm.nome + " vs " + jogo.timeDois.nome  + " - " + jogo.timeUm.cidade);
+                
+            });
+        }
     </script>
 </body>
 </html>
