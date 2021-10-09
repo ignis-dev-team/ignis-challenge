@@ -14,182 +14,381 @@
         <textarea name="lista-times" id="lista-times" cols="60" rows="20" required></textarea>
         <button onclick="criarListaTexto()">Iniciar Simulação</button>
     </form>
+
     <script>
-        var textoTimes;
-        var textoListaTimes;
-        var listaTimes;
-        var listaPartidas;
-        var achou = true;
-        var listaDeJogos = [];
 
-        function criarListaTexto(){
-            var erro;
-            textoTimes = document.getElementById('lista-times').value;
-            textoListaTimes = textoTimes.split('\n');
-            if(textoListaTimes.length % 2 != 0){
-                alert("Digite uma quantidade par de times!");
-                return;
+var textoTimes;
+var textoListaTimes;
+var listaTimes;
+var listaPartidas;
+var achou = true;
+var maiorPontuação = 0;
+var listaDeJogos = [];
+
+function criarListaTexto(){
+    var erro;
+    textoTimes = document.getElementById('lista-times').value;
+    textoListaTimes = textoTimes.split('\n');
+    if(textoListaTimes.length % 2 != 0){
+        alert("Digite uma quantidade par de times!");
+        return;
+    }
+    erro = verificaTextoLista(textoListaTimes);
+    if(erro == true){
+        alert("Siga o padrão mostrado acima!");
+    }else{
+        listaTimes = criarListaTimes(textoListaTimes);
+        listaPartidas = criarListaPartidas(listaTimes);
+    }  
+}
+function verificaTextoLista(textoListaTimes){
+    var erro = false;
+    var listaAuxiliar;
+
+    textoListaTimes.forEach(textoTime => {    
+        if(textoTime.includes(';')){
+            listaAuxiliar = textoTime.split(';');
+            if (listaAuxiliar.length != 2) {
+                erro = true;
             }
-            erro = verificaTextoLista(textoListaTimes);
-            if(erro == true){
-                alert("Siga o padrão mostrado acima!");
+        }else{
+            erro = true;
+        }
+    });
+    return erro;
+}
+function criarListaTimes(textoListaTimes){
+    var listaAuxiliar;
+    var listaTimes = [];
+    var numero = 0
+    textoListaTimes.forEach(textoTime => {    
+        listaAuxiliar = textoTime.split(';');
+        listaTimes.push({nome: listaAuxiliar[0], cidade: listaAuxiliar[1], numero: numero, pontos: 0});
+        numero++;
+    });
+    return listaTimes;
+}
+
+function copiarLista(listaTimes) {
+    
+    var listaAuxiliar = [];
+
+    for (let index = 0; index < listaTimes.length; index++) {
+        
+        listaAuxiliar.push(listaTimes[index]);
+        
+    }
+
+    return listaAuxiliar;
+
+}
+
+function embaralha(lista) {
+
+    for (let indice = lista.length; indice; indice--) {
+
+        const indiceAleatorio = Math.floor(Math.random() * indice);
+        
+        const elemento = lista[indice - 1];
+        
+        lista[indice - 1] = lista[indiceAleatorio];
+        
+        lista[indiceAleatorio] = elemento;
+    }
+}
+
+function pegaLista(){
+
+    return listaTimes;
+}
+
+function rodad(listaTimes, confrontos){
+    
+    var copiaListaTimes = [];
+    var copiaListaConfrontos = [];
+
+
+    listaTimes.forEach(time => {
+
+        copiaListaTimes.push(time);
+        
+    });
+
+
+
+    confrontos.forEach(confronto => {
+
+        copiaListaConfrontos.push(confronto);
+        
+    });
+
+    embaralha(copiaListaTimes);
+
+
+    for (let index = 0; index < copiaListaConfrontos.length; index++) {
+        if((copiaListaConfrontos[index].timeUm === copiaListaTimes[copiaListaTimes.length - 1] || copiaListaConfrontos[index].timeDois === copiaListaTimes[copiaListaTimes.length - 1])  && (copiaListaConfrontos[index].timeUm === copiaListaTimes[copiaListaTimes.length - 2] || copiaListaConfrontos[index].timeDois === copiaListaTimes[copiaListaTimes - length - 2])){
+            listaDeJogos.push(copiaListaConfrontos[index]);
+            copiaListaConfrontos.splice(index, 1);
+            copiaListaTimes.splice(copiaListaTimes.length - 2, 2); 
+            break;
+        }
+        
+    }
+
+
+    if(copiaListaTimes.length > 0){
+
+        rodad(copiaListaTimes, copiaListaConfrontos);
+
+
+    }else{
+
+
+        if(copiaListaConfrontos.length > 0){
+
+            rodad(pegaLista(), copiaListaConfrontos);
+
+        }
+    
+
+    }
+
+
+}
+
+function pontuarTime(time, pontos, listaTimes){
+    
+    listaTimes.forEach(elemento => {
+        if(elemento.nome == time.nome){
+            elemento.pontos = elemento.pontos + pontos;
+        }
+    });
+
+}
+
+function criarListaPartidas(listaTimes){
+
+    var confrontos = [];
+    var rodada = 1;
+    var golsTimeUm;
+    var golsTimeDois;
+    var totalJogosRodada;
+    var melhores = [];
+    const VITORIA = 3;
+    const EMPATE = 1;
+    var maiorPontuação = 0;
+
+    for (let i = 0; i < listaTimes.length; i++) {
+        
+        for (let j = 0; j < listaTimes.length; j++) {
+            
+            if(i < j){
+
+                confrontos.push({timeUm: listaTimes[i], timeDois: listaTimes[j]});
+
+            }
+            
+        }
+
+    }
+
+    var auxiliar;
+
+    for (let index = 0; index < confrontos.length; index += 2) {
+        
+        auxiliar = confrontos[index].timeUm;
+        confrontos[index].timeUm = confrontos[index].timeDois;
+        confrontos[index].timeDois = auxiliar;
+    }
+
+    embaralha(confrontos);
+    rodad(listaTimes, confrontos);
+
+    totalJogosRodada = (listaTimes.length/2);
+    var contador = 0;
+
+    document.write("AGENDA DE JOGOS");
+    document.write("<br>");
+
+    listaDeJogos.forEach(jogo => {
+
+
+        if(contador == totalJogosRodada){
+
+            rodada++;
+            contador = 0;
+
+        }
+
+        contador++;
+
+        document.write(jogo.timeUm.nome + " vs " + jogo.timeDois.nome  + " - " + jogo.timeUm.cidade + " - Rodada " + rodada);
+        document.write("<br>");
+    });
+
+    listaDeJogos.forEach(jogo => {
+
+
+        if(contador == totalJogosRodada){
+
+            rodada++;
+            contador = 0;
+
+        }
+
+        contador++;
+        document.write(jogo.timeDois.nome  + " vs " + jogo.timeUm.nome + " - " + jogo.timeDois.cidade + " - Rodada " + rodada);
+        document.write("<br>");
+    });
+
+    document.write("<br>");document.write("<br>");document.write("<br>");       
+
+    document.write("RESULTADOS");
+    document.write("<br>");
+
+    contador = 0;
+    rodada = 1;
+
+    listaDeJogos.forEach(jogo => {
+
+
+        if(contador == totalJogosRodada){
+
+            rodada++;
+            contador = 0;
+
+        }
+
+        contador++;
+        golsTimeUm = Math.floor(Math.random() * 10);
+        golsTimeDois = Math.floor(Math.random() * 10);
+        document.write(jogo.timeUm.nome + " " + golsTimeUm + " vs " + " " + golsTimeDois + " " + jogo.timeDois.nome  + " - " + jogo.timeUm.cidade + " - Rodada " + rodada);
+        document.write("<br>");
+
+        if(golsTimeUm > golsTimeDois){
+
+            pontuarTime(jogo.timeUm, VITORIA, listaTimes);
+
+        }else if(golsTimeDois > golsTimeUm){
+
+            pontuarTime(jogo.timeDois, VITORIA, listaTimes);
+
+
+        }else{
+
+            pontuarTime(jogo.timeUm, EMPATE, listaTimes);
+            pontuarTime(jogo.timeDois, EMPATE, listaTimes);
+
+        }
+    });
+
+    listaDeJogos.forEach(jogo => {
+
+
+        if(contador == totalJogosRodada){
+
+            rodada++;
+            contador = 0;
+
+        }
+
+        contador++;
+        golsTimeUm = Math.floor(Math.random() * 10);
+        golsTimeDois = Math.floor(Math.random() * 10);
+        document.write(jogo.timeDois.nome + " " + golsTimeDois + " vs " + " " + golsTimeUm + " " + jogo.timeUm.nome  + " - " + jogo.timeDois.cidade + " - Rodada " + rodada);
+        document.write("<br>"); 
+
+        if(golsTimeUm > golsTimeDois){
+
+            pontuarTime(jogo.timeUm, VITORIA, listaTimes);
+
+        }else if(golsTimeDois > golsTimeUm){
+
+            pontuarTime(jogo.timeDois, VITORIA, listaTimes);
+
+
+        }else{
+
+            pontuarTime(jogo.timeUm, EMPATE, listaTimes);
+            pontuarTime(jogo.timeDois, EMPATE, listaTimes);
+
+        }
+        
+    });
+
+    document.write("<br>");
+    document.write("<br>");
+
+
+    document.write("Pontuação Geral:"); 
+    document.write("<br>");
+    
+
+    listaTimes.forEach(time => {
+        document.write(time.nome + " - " + time.pontos); 
+        document.write("<br>"); 
+
+        if(time.pontos > maiorPontuação){
+
+            maiorPontuação = time.pontos;
+
+        }
+    });
+
+
+    listaTimes.forEach(time => {
+        if(time.pontos == maiorPontuação){
+
+            melhores.push(time.nome);
+
+        }
+    });
+
+    if(melhores.length == 1){
+
+
+        document.write("<br>");
+        document.write("<br>");
+        document.write("Time Campeão:");
+        document.write("<br>");
+        document.write("O time campeão foi o " + melhores[0] + " com " + maiorPontuação + " pontos."); 
+        document.write("<br>");
+
+    }else{
+
+        document.write("<br>");
+        document.write("<br>");
+        document.write("Times Campeões:");
+        document.write("<br>");
+        document.write("IIhh, houve empate na pontuação! Times campeões foram os ");
+
+        for (let index = 0; index < melhores.length; index++) {
+        
+            if(index != melhores.length - 1 && index != melhores.length - 2){
+
+                document.write(melhores[index] + ", ");
+
+            }else if(index == melhores.length - 2){
+
+                document.write(melhores[index] + " e ");
+
             }else{
-                listaTimes = criarListaTimes(textoListaTimes);
-                listaPartidas = criarListaPartidas(listaTimes);
-            }  
-        }
-        function verificaTextoLista(textoListaTimes){
-            var erro = false;
-            var listaAuxiliar;
 
-            textoListaTimes.forEach(textoTime => {    
-                if(textoTime.includes(';')){
-                    listaAuxiliar = textoTime.split(';');
-                    if (listaAuxiliar.length != 2) {
-                        erro = true;
-                    }
-                }else{
-                    erro = true;
-                }
-            });
-            return erro;
-        }
-        function criarListaTimes(textoListaTimes){
-            var listaAuxiliar;
-            var listaTimes = [];
-            var numero = 0
-            textoListaTimes.forEach(textoTime => {    
-                listaAuxiliar = textoTime.split(';');
-                listaTimes.push({nome: listaAuxiliar[0], cidade: listaAuxiliar[1], numero: numero});
-                numero++;
-            });
-            return listaTimes;
-        }
+                document.write(melhores[index]);
 
-        function copiarLista(listaTimes) {
+            }
             
-            var listaAuxiliar = [];
-
-            for (let index = 0; index < listaTimes.length; index++) {
-                
-                listaAuxiliar.push(listaTimes[index]);
-                
-            }
-
-            return listaAuxiliar;
-
         }
 
-        function embaralha(lista) {
-
-            for (let indice = lista.length; indice; indice--) {
-
-                const indiceAleatorio = Math.floor(Math.random() * indice);
-                
-                // guarda de um índice aleatório da lista
-                const elemento = lista[indice - 1];
-                
-                lista[indice - 1] = lista[indiceAleatorio];
-                
-                lista[indiceAleatorio] = elemento;
-            }
-        }
-
-        function pegaLista(){
-
-            return listaTimes;
-        }
-
-        function rodad(listaTimes, confrontos, rodada){
-            
-            var copiaListaTimes = [];
-            var copiaListaConfrontos = [];
-
-
-            listaTimes.forEach(time => {
-
-                copiaListaTimes.push(time);
-                
-            });
+        document.write(" com " + maiorPontuação + " pontos.");
+        
+    }
 
 
 
-            confrontos.forEach(confronto => {
+}
 
-                copiaListaConfrontos.push(confronto);
-                
-            });
-
-            embaralha(copiaListaTimes);
-
-
-            for (let index = 0; index < copiaListaConfrontos.length; index++) {
-                if((copiaListaConfrontos[index].timeUm === copiaListaTimes[copiaListaTimes.length - 1] || copiaListaConfrontos[index].timeDois === copiaListaTimes[copiaListaTimes.length - 1])  && (copiaListaConfrontos[index].timeUm === copiaListaTimes[copiaListaTimes.length - 2] || copiaListaConfrontos[index].timeDois === copiaListaTimes[copiaListaTimes - length - 2])){
-                    listaDeJogos.push(copiaListaConfrontos[index]);
-                    copiaListaConfrontos.splice(index, 1);
-                    copiaListaTimes.splice(copiaListaTimes.length - 2, 2); 
-                    break;
-                }
-                
-            }
-
-
-            if(copiaListaTimes.length > 0){
-
-                rodad(copiaListaTimes, copiaListaConfrontos,rodada);
-
-
-            }else{
-
-                if(copiaListaConfrontos.length > 0){
-
-                    
-                    rodada++;
-                    rodad(pegaLista(), copiaListaConfrontos,rodada);
-
-                }
-            
-
-            }
-
-
-        }
-        function criarListaPartidas(listaTimes){
-
-            var confrontos = [];
-            var rodada = 1;
-
-            for (let i = 0; i < listaTimes.length; i++) {
-                
-                for (let j = 0; j < listaTimes.length; j++) {
-                    
-                    if(i < j){
-
-                        confrontos.push({timeUm: listaTimes[i], timeDois: listaTimes[j]});
-
-                    }
-                    
-                }
-
-            }
-
-            var auxiliar;
-
-            for (let index = 0; index < confrontos.length; index += 2) {
-                
-                auxiliar = confrontos[index].timeUm;
-                confrontos[index].timeUm = confrontos[index].timeDois;
-                confrontos[index].timeDois = auxiliar;
-            }
-
-            embaralha(confrontos);
-            rodad(listaTimes, confrontos, rodada);
-            listaDeJogos.forEach(jogo => {
-
-                alert(jogo.timeUm.nome + " vs " + jogo.timeDois.nome  + " - " + jogo.timeUm.cidade);
-                
-            });
-        }
     </script>
+
 </body>
 </html>
