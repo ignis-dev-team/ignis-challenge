@@ -15,5 +15,125 @@
         <textarea name="lista-times" id="lista-times" cols="60" rows="20" required></textarea>
         <button onclick="criarListaTexto()">Iniciar Simulação</button>
     </form>
+    <script>
+        
+        var textoTimes;
+    var textoListaTimes;
+    var listaTimes;
+    var listaPartidas;
+    var achou = true;
+
+    function criarListaTexto(){
+        var erro;
+        textoTimes = document.getElementById('lista-times').value;
+        textoListaTimes = textoTimes.split('\n');
+        if(textoListaTimes.length % 2 != 0){
+            alert("Digite uma quantidade par de times!");
+            return;
+        }
+        erro = verificaTextoLista(textoListaTimes);
+        if(erro == true){
+            alert("Siga o padrão mostrado acima!");
+        }else{
+            listaTimes = criarListaTimes(textoListaTimes);
+            listaPartidas = criarListaPartidas(listaTimes);
+        }  
+    }
+    function verificaTextoLista(textoListaTimes){
+        var erro = false;
+        var listaAuxiliar;
+
+        textoListaTimes.forEach(textoTime => {    
+            if(textoTime.includes(';')){
+                listaAuxiliar = textoTime.split(';');
+                if (listaAuxiliar.length != 2) {
+                    erro = true;
+                }
+            }else{
+                erro = true;
+            }
+        });
+        return erro;
+    }
+    function criarListaTimes(textoListaTimes){
+        var listaAuxiliar;
+        var listaTimes = [];
+        var numero = 0
+        textoListaTimes.forEach(textoTime => {    
+            listaAuxiliar = textoTime.split(';');
+            listaTimes.push({nome: listaAuxiliar[0], cidade: listaAuxiliar[1], numero: numero});
+            numero++;
+        });
+        return listaTimes;
+    }
+
+    function copiarLista(listaTimes) {
+        
+        var listaAuxiliar = [];
+
+        for (let index = 0; index < listaTimes.length; index++) {
+            
+            listaAuxiliar.push(listaTimes[index]);
+            
+        }
+
+        return listaAuxiliar;
+
+    }
+
+    function embaralha(lista) {
+
+        for (let indice = lista.length; indice; indice--) {
+
+            const indiceAleatorio = Math.floor(Math.random() * indice);
+            
+            // guarda de um índice aleatório da lista
+            const elemento = lista[indice - 1];
+            
+            lista[indice - 1] = lista[indiceAleatorio];
+            
+            lista[indiceAleatorio] = elemento;
+        }
+    }
+
+
+    function criarListaPartidas(listaTimes){
+
+        var confrontos = [];
+        var listaTimesJogaram;
+        var confrontosJogados;
+        var jogosPorRodada = 0;
+
+        for (let i = 0; i < listaTimes.length; i++) {
+            
+            for (let j = 0; j < listaTimes.length; j++) {
+                
+                if(i < j){
+
+                    confrontos.push({timeUm: listaTimes[i], timeDois: listaTimes[j]});
+
+                }
+                
+            }
+
+        }
+
+        var auxiliar;
+
+        for (let index = 0; index < confrontos.length; index += 2) {
+            
+            auxiliar = confrontos[index].timeUm;
+            confrontos[index].timeUm = confrontos[index].timeDois;
+            confrontos[index].timeDois = auxiliar;
+        }
+
+        embaralha(confrontos);
+
+        confrontos.forEach(confronto => {
+            alert(confronto.timeUm.nome + " " + confronto.timeDois.nome);
+        });
+    }
+
+    </script>
 </body>
 </html>
