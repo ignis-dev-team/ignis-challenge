@@ -20,6 +20,7 @@
 
     <script>
 
+        var listaConfrontosRetirados = [];
         var textoTimes;
         var textoListaTimes;
         var listaTimes;
@@ -36,6 +37,7 @@
                 alert("Digite uma quantidade par de times!");
                 return;
             }
+            
             erro = verificaTextoLista(textoListaTimes);
             if (erro == true) {
                 alert("Siga o padrão mostrado acima!");
@@ -63,7 +65,7 @@
         function criarListaTimes(textoListaTimes) {
             var listaAuxiliar;
             var listaTimes = [];
-            var numero = 0
+            var numero = 0;
             textoListaTimes.forEach(textoTime => {
                 listaAuxiliar = textoTime.split(';');
                 listaTimes.push({ nome: listaAuxiliar[0], cidade: listaAuxiliar[1], numero: numero, pontos: 0 });
@@ -98,6 +100,8 @@
 
                 lista[indiceAleatorio] = elemento;
             }
+
+
         }
 
         function pegaLista() {
@@ -106,6 +110,7 @@
         }
 
         function rodad(listaTimes, confrontos) {
+
 
             var copiaListaTimes = [];
             var copiaListaConfrontos = [];
@@ -129,8 +134,10 @@
 
 
             for (let index = 0; index < copiaListaConfrontos.length; index++) {
+
                 if ((copiaListaConfrontos[index].timeUm === copiaListaTimes[copiaListaTimes.length - 1] || copiaListaConfrontos[index].timeDois === copiaListaTimes[copiaListaTimes.length - 1]) && (copiaListaConfrontos[index].timeUm === copiaListaTimes[copiaListaTimes.length - 2] || copiaListaConfrontos[index].timeDois === copiaListaTimes[copiaListaTimes - length - 2])) {
                     listaDeJogos.push(copiaListaConfrontos[index]);
+                    listaConfrontosRetirados.push(copiaListaConfrontos[index]);
                     copiaListaConfrontos.splice(index, 1);
                     copiaListaTimes.splice(copiaListaTimes.length - 2, 2);
                     break;
@@ -138,6 +145,26 @@
 
             }
 
+                
+            if((verificaErro(copiaListaTimes, copiaListaConfrontos) == false) && copiaListaTimes.length != 0){
+                
+                listaConfrontosRetirados.forEach(confronto => {
+                    
+                    copiaListaConfrontos.push(confronto);
+
+                });
+
+
+                copiaListaTimes = pegaLista();
+
+                listaConfrontosRetirados = [];
+
+                listaDeJogos.splice(listaDeJogos.length - 2, 2);
+
+            }
+
+
+            
 
             if (copiaListaTimes.length > 0) {
 
@@ -146,6 +173,7 @@
 
             } else {
 
+                listaConfrontosRetirados = [];
 
                 if (copiaListaConfrontos.length > 0) {
 
@@ -156,6 +184,34 @@
 
             }
 
+
+        }
+
+        function verificaErro(listaTimes, listaConfrontos) {
+
+            var achouPossibilidade = false;
+            
+            for (let i = 0; i < listaTimes.length; i++) {
+
+                for (let j = 0; j < listaTimes.length; j++) {
+                    
+
+                    listaConfrontos.forEach(confronto => {
+                        
+                        if((((confronto.timeUm.nome == listaTimes[i].nome) &&  (confronto.timeDois.nome == listaTimes[j].nome))  || ((confronto.timeUm.nome == listaTimes[j].nome) &&  (confronto.timeDois.nome == listaTimes[i].nome)))){
+
+                            achouPossibilidade = true;
+                            
+                        }
+
+                    });
+                    
+                    
+                }
+                
+            }
+
+            return achouPossibilidade;
 
         }
 
@@ -170,6 +226,7 @@
         }
 
         function criarListaPartidas(listaTimes) {
+
 
             var confrontos = [];
             var rodada = 1;
@@ -208,10 +265,11 @@
                 confrontos[index].timeDois = auxiliar;
             }
 
+
             embaralha(confrontos);
+
+                       
             rodad(listaTimes, confrontos);
-
-
 
             totalJogosRodada = (listaTimes.length / 2);
             var contador = 0;
@@ -478,7 +536,7 @@
                 }
 
                 document.write(" com " + maiorPontuação + " pontos.");
-
+                
             }
 
 
@@ -486,6 +544,7 @@
         }
 
     </script>
+
 
 </body>
 
