@@ -27,7 +27,10 @@
         var listaPartidas;
         var achou = true;
         var maiorPontuação = 0;
+        var contadorErros = 0;
         var listaDeJogos = [];
+        var confrontos = [];
+        var totalJogosRodada;
 
         function criarListaTexto() {
             var erro;
@@ -109,11 +112,16 @@
             return listaTimes;
         }
 
+        function pegaConfrontos() {
+
+            return confrontos;
+        }
+
         function rodad(listaTimes, confrontos) {
-
-
             var copiaListaTimes = [];
             var copiaListaConfrontos = [];
+
+            contadorErros++;
 
 
             listaTimes.forEach(time => {
@@ -133,6 +141,28 @@
             embaralha(copiaListaTimes);
 
 
+            if(contadorErros == 100){
+
+                alert('Deua');
+                contadorErros = 0;
+
+                copiaListaTimes = [];
+                copiaListaConfrontos = [];
+
+                listaConfrontosRetirados = [];
+                listaDeJogos = [];
+
+                listaTimes = pegaLista();
+                confrontos = pegaConfrontos();
+
+                embaralha(confrontos);
+                embaralha(listaTimes);
+
+                rodad(listaTimes, confrontos);
+
+            }
+
+
             for (let index = 0; index < copiaListaConfrontos.length; index++) {
 
                 if ((copiaListaConfrontos[index].timeUm === copiaListaTimes[copiaListaTimes.length - 1] || copiaListaConfrontos[index].timeDois === copiaListaTimes[copiaListaTimes.length - 1]) && (copiaListaConfrontos[index].timeUm === copiaListaTimes[copiaListaTimes.length - 2] || copiaListaConfrontos[index].timeDois === copiaListaTimes[copiaListaTimes - length - 2])) {
@@ -148,6 +178,7 @@
                 
             if((verificaErro(copiaListaTimes, copiaListaConfrontos) == false) && copiaListaTimes.length != 0){
                 
+                
                 listaConfrontosRetirados.forEach(confronto => {
                     
                     copiaListaConfrontos.push(confronto);
@@ -159,7 +190,7 @@
 
                 listaConfrontosRetirados = [];
 
-                listaDeJogos.splice(listaDeJogos.length - 2, 2);
+                listaDeJogos.splice(listaDeJogos.length - (totalJogosRodada - 1), 2);
 
             }
 
@@ -226,15 +257,11 @@
         }
 
         function criarListaPartidas(listaTimes) {
-
-
-            var confrontos = [];
             var rodada = 1;
             var copiaRodada = 1;
             var copiaContador = 0;
             var golsTimeUm;
             var golsTimeDois;
-            var totalJogosRodada;
             var listaCidadesPrimeiro = [];
             var listaCidadesSegundo = [];
             var melhores = [];
@@ -268,10 +295,11 @@
 
             embaralha(confrontos);
 
+
+            totalJogosRodada = (listaTimes.length / 2);
                        
             rodad(listaTimes, confrontos);
 
-            totalJogosRodada = (listaTimes.length / 2);
             var contador = 0;
 
             listaDeJogos.forEach(jogo => {
@@ -307,7 +335,6 @@
                 listaCidadesSegundo.push({ rodada: copiaRodada, cidade: jogo.timeDois.cidade });
 
             });
-
 
 
             document.write("AGENDA DE JOGOS");
