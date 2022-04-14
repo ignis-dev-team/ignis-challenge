@@ -66,7 +66,6 @@ const verifyDoubleRound = (rounds) => {
                     }
                     games.push(game)
                     rounds[roundIndex] = games
-                    // console.log(rounds[roundIndex]);
                 }
             }
         }
@@ -95,7 +94,6 @@ const populateRoundsDiv = (rounds) => {
     for (let i = 0; i < rounds.length; i++) {
         let round = document.createElement("div");
         let roundHero = document.createElement("h3");
-        // roundHero.innerText = `Rodada ${i + 1}`;
         roundHero.innerText = `-------------------------------------------------------`;
         round.appendChild(roundHero);
 
@@ -124,16 +122,12 @@ const CreatePointsCatalog = () => {
 }
 
 const populateClassificationsDiv = (pointsCatalog) => {
-    // console.log(pointsCatalog);
+    classification.innerHTML = ""
     for (let indexTeam = 0; indexTeam < pointsCatalog.length; indexTeam++) {
         let game = document.createElement("p");
         game.innerText = `${pointsCatalog[indexTeam][0]} - ${pointsCatalog[indexTeam][1]} pontos `
         classification.appendChild(game)
-        // console.log(pointsCatalog[indexTeam][1]);
-
     }
-
-
 }
 
 const btnSendTeams = () => {
