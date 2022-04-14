@@ -1,5 +1,4 @@
 const sendTeams = document.getElementById("send-teams");
-// const teamsBlock = document.getElementById("teams-block");
 const roundsDiv = document.getElementById("rounds");
 
 const getTeams = () => {
@@ -15,7 +14,6 @@ const createRounds = () => {
     for (let index = 1; index <= rangeRounds; index++) {
         rounds.push([[]]);
     }
-
     return rounds;
 };
 
@@ -23,7 +21,6 @@ const verifyTeam = (rounds, t, a, game) => {
     for (let i = 0; i < rounds.length; i++) {
         let round = rounds[i];
         if (round[0].includes(t) || round[0].includes(a)) {
-            //   rounds[i + 5].push(game);
         } else {
             round[0] += ` ${a} ${t}`;
             round.push(game);
@@ -43,15 +40,12 @@ const organizeRounds = () => {
             }
         }
     }
-    //   console.log(rounds);
     return rounds;
 };
 
 const verifyDoubleRound = (rounds) => {
-    // console.log(rounds[1]);
 
     for (let roundIndex = 0; roundIndex < rounds.length; roundIndex++) {
-        // let round = rounds[roundIndex] 
         let states = {}
         for (let index = 1; index < rounds[roundIndex].length; index++) {
             let game = rounds[roundIndex][index]
@@ -71,14 +65,28 @@ const verifyDoubleRound = (rounds) => {
                     }
                     games.push(game)
                     rounds[roundIndex] = games
-                    // console.log(games);
-                    console.log(rounds[roundIndex]);
+                    // console.log(rounds[roundIndex]);
                 }
             }
         }
     }
+    return rounds
+}
 
-    // console.log(states);
+const randomWiners = (rounds) => {
+    for (let round of rounds) {
+        for (let index = 1; index < round.length; index++) {
+            let result = Math.floor(Math.random() * 3)
+            if (result == 0) {
+                participants[round[index][0]]['points'] += 3
+            } else if (result == 1) {
+                participants[round[index][1]]['points'] += 3
+            } else if (result == 2) {
+                participants[round[index][0]]['points'] += 1
+                participants[round[index][1]]['points'] += 1
+            }
+        }
+    }
     return rounds
 }
 
@@ -90,7 +98,6 @@ const populateRoundsDiv = (rounds) => {
         roundHero.innerText = `-------------------------------------------------------`;
         round.appendChild(roundHero);
 
-
         for (let k = 1; k < rounds[i].length; k++) {
             let game = rounds[i][k];
             let roundParagraph = document.createElement("p");
@@ -101,11 +108,8 @@ const populateRoundsDiv = (rounds) => {
                 paragraph = `${paragraph} ${game[3]}`
             }
             roundParagraph.innerText = paragraph;
-
-
             round.appendChild(roundParagraph);
         }
-
         roundsDiv.appendChild(round);
     }
 };
@@ -121,12 +125,14 @@ const btnSendTeams = () => {
         const list = string.split(";");
         participants[list[0]] = {
             house: list[1],
+            points: 0
         };
     }
-
     let rounds = organizeRounds();
     rounds = verifyDoubleRound(rounds)
+    randomWiners(rounds)
     populateRoundsDiv(rounds);
+    console.log(participants);
 };
 
 sendTeams.addEventListener("click", btnSendTeams);
