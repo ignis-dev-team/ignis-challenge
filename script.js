@@ -114,6 +114,14 @@ const populateRoundsDiv = (rounds) => {
     }
 };
 
+const CreatePointsCatalog = () => {
+    pointsCatalog = {}
+    for (let team of Object.keys(participants)) {
+        pointsCatalog[team] = participants[team].points
+    }
+    return pointsCatalog
+}
+
 const btnSendTeams = () => {
     roundsDiv.innerHTML = "";
     participants = {};
@@ -132,7 +140,8 @@ const btnSendTeams = () => {
     rounds = verifyDoubleRound(rounds)
     randomWiners(rounds)
     populateRoundsDiv(rounds);
-    console.log(participants);
+    let pointsCatalog = CreatePointsCatalog()
+    pointsCatalog = Object.entries(pointsCatalog).sort((a, b) => b[1] - a[1])
 };
 
 sendTeams.addEventListener("click", btnSendTeams);
