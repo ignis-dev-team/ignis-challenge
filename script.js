@@ -1,5 +1,6 @@
 const sendTeams = document.getElementById("send-teams");
 const roundsDiv = document.getElementById("rounds");
+const classification = document.getElementById("classification");
 
 const getTeams = () => {
     let teams = document.getElementById("teams-input").value;
@@ -122,6 +123,19 @@ const CreatePointsCatalog = () => {
     return pointsCatalog
 }
 
+const populateClassificationsDiv = (pointsCatalog) => {
+    // console.log(pointsCatalog);
+    for (let indexTeam = 0; indexTeam < pointsCatalog.length; indexTeam++) {
+        let game = document.createElement("p");
+        game.innerText = `${pointsCatalog[indexTeam][0]} - ${pointsCatalog[indexTeam][1]} pontos `
+        classification.appendChild(game)
+        // console.log(pointsCatalog[indexTeam][1]);
+
+    }
+
+
+}
+
 const btnSendTeams = () => {
     roundsDiv.innerHTML = "";
     participants = {};
@@ -142,6 +156,7 @@ const btnSendTeams = () => {
     populateRoundsDiv(rounds);
     let pointsCatalog = CreatePointsCatalog()
     pointsCatalog = Object.entries(pointsCatalog).sort((a, b) => b[1] - a[1])
+    populateClassificationsDiv(pointsCatalog)
 };
 
 sendTeams.addEventListener("click", btnSendTeams);
