@@ -1,11 +1,11 @@
-**Notas do João** <br>
+# Notas do João <br>
 
-# Para Abrir no servidor
+**Para Abrir no servidor**
 - ter o npm instalado 
 - entrar na pasta Torneio-Futebol(cd Torneio-Futebol)
 - iniciar o servidor com o comando npm start
 
-# Abrir sem servidor
+**Abrir sem servidor**
 - executar o arquivo index.html localizado na pasta JOAO_MUNHOZ_DEV_2022\Torneio-Futebol\index.html
 
 **Muito obrigado pela oportunidade, espero encontrar os senhores em breve :D** <br>
