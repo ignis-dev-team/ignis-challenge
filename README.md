@@ -1,7 +1,7 @@
 # Notas do João <br>
 
 **Para Abrir no servidor**
-- ter o npm instalado e rodar os comandos de npm install para dependencias do projeto
+- ter o npm instalado e rodar o comando npm install para dependencias do projeto
 - entrar na pasta Torneio-Futebol(cd Torneio-Futebol)
 - iniciar o servidor com o comando npm start
 
