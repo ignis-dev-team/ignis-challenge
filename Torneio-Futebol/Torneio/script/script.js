@@ -9,6 +9,7 @@ var segTurno
 function torneio() {
 
     console.log(document.getElementById('resultado').innerHTML = '')
+    console.log(document.getElementById('champion').innerHTML = '')
 
     console.log('Todos os Times')
     times = getData()
@@ -31,8 +32,8 @@ function torneio() {
         console.log(rodadasIda)
         console.log('Rodada Volta')
         console.log(rodadasVolta)
-        priTurno = '1° TURNO\n' + toPrint(rodadasIda)
-        segTurno = '2° TURNO\n' + toPrint(rodadasVolta)
+        priTurno = '1 TURNO\n' + toPrint(rodadasIda)
+        segTurno = '2 TURNO\n' + toPrint(rodadasVolta)
 
         console.log(newElement(segTurno, '65', '20'))
         console.log(newElement(priTurno, '65', '20'))
@@ -49,10 +50,11 @@ function torneio() {
         times = times.sort(compare)
         console.log('Tabela de Pontos')
         console.log(times)
-        tabLid = 'TABELA DE LÍDERES\n' + tabelaDeLideres(times)
+        tabLid = 'TABELA DE LIDERES\n' + tabelaDeLideres(times)
         newElement(tabLid, '25', '20')
         console.log('\n--------------------------\n')
         console.log('EXERCICIO\n'+priTurno+'\n'+segTurno+'\n'+tabLid)
+        champion(times[0].nome)
         
     } else {
         window.alert('Favor informar um numero par de times')
@@ -79,7 +81,7 @@ function toPrint(rodadas) {
 function tabelaDeLideres(times) {
     let str = ''
     for (let index = 0; index < times.length; index++) {
-        str += (index + 1).toString() + '° - ' + times[index].nome.toString() + ' (' + times[index].pontos.toString() + ')\n'
+        str += (index + 1).toString() + ' - ' + times[index].nome.toString() + ' (' + times[index].pontos.toString() + ')\n'
     }
     return str
 }
@@ -210,6 +212,13 @@ function shuffleArray(arr) {
     }
     return arr;
 }
+function champion(champion) {
+    
+    document.getElementById('champion').innerHTML = (champion + ' é o campeão ');
+    document.getElementById('champion').style.opacity = 1
+    
+}
+    
 
 function compare(a, b) {
     if (a.pontos > b.pontos)
