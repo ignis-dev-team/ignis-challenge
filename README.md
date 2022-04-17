@@ -8,6 +8,8 @@
 **Abrir sem servidor**
 - executar o arquivo index.html localizado na pasta JOAO_MUNHOZ_DEV_2022\Torneio-Futebol\index.html
 
+OBS: caso não possa utilizar o css para estilização deixei no log do console tambem o exercicio
+
 **Muito obrigado pela oportunidade, espero encontrar os senhores em breve :D** <br>
 
 --------------------------------------------------------------------------------------------------------
