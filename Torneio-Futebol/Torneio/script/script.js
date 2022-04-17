@@ -32,8 +32,8 @@ function torneio() {
         console.log(rodadasIda)
         console.log('Rodada Volta')
         console.log(rodadasVolta)
-        priTurno = '1 TURNO\n' + toPrint(rodadasIda)
-        segTurno = '2 TURNO\n' + toPrint(rodadasVolta)
+        priTurno = '1° TURNO\n' + toPrint(rodadasIda)
+        segTurno = '2° TURNO\n' + toPrint(rodadasVolta)
 
         console.log(newElement(segTurno, '65', '20'))
         console.log(newElement(priTurno, '65', '20'))
@@ -50,7 +50,7 @@ function torneio() {
         times = times.sort(compare)
         console.log('Tabela de Pontos')
         console.log(times)
-        tabLid = 'TABELA DE LIDERES\n' + tabelaDeLideres(times)
+        tabLid = 'TABELA DE LÍDERES\n' + tabelaDeLideres(times)
         newElement(tabLid, '25', '20')
         console.log('\n--------------------------\n')
         console.log('EXERCICIO\n'+priTurno+'\n'+segTurno+'\n'+tabLid)
@@ -81,7 +81,7 @@ function toPrint(rodadas) {
 function tabelaDeLideres(times) {
     let str = ''
     for (let index = 0; index < times.length; index++) {
-        str += (index + 1).toString() + ' - ' + times[index].nome.toString() + ' (' + times[index].pontos.toString() + ')\n'
+        str += (index + 1).toString() + '° - ' + times[index].nome.toString() + ' (' + times[index].pontos.toString() + ')\n'
     }
     return str
 }
